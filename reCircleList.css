@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>ASSAM FLOOD</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Skote is a fully featured premium admin dashboard template built on top of awesome Bootstrap 4.4.1" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <!-- Bootstrap Css -->
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
+
+    </head>
+
+    <body data-sidebar="dark">
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            <header id="page-topbar">
+                <div class="navbar-header">
+                    <div class="d-flex">
+                        <!-- LOGO -->
+                        <div class="navbar-brand-box">
+
+                            <a href="index.html" class="logo logo-light">
+                                <span class="logo-sm">
+                                    <img src="assets/images/logo.svg" alt="" height="22">
+                                </span>
+                                <span class="logo-lg">
+                                    <img src="assets/images/logo-light.png" alt="" height="20">
+                                </span>
+                            </a>
+                        </div>
+
+                        <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn">
+                            <i class="mdi mdi-backburger"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="d-flex">
+
+                        <div class="d-inline-block">
+                            <h5><span class="badge badge-danger float-right">v1.4.1</span></h5>
+                        </div>
+            
+                    </div>
+                </div>
+            </header>
+
+            <!-- ========== Left Sidebar Start ========== -->
+            <div class="vertical-menu">
+
+                <div data-simplebar class="h-100">
+
+                    <!--- Sidemenu -->
+                    <div id="sidebar-menu">
+                        <!-- Left Menu Start -->
+                        <ul class="metismenu list-unstyled" id="side-menu">
+                            <li class="menu-title">Docs</li>
+
+                            <li>
+                                <a href="#" class="waves-effect">
+                                    <i class="mdi mdi-file-document-box-outline"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                    <i class="mdi mdi-settings-outline"></i>
+                                    <span>Master</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="districtList.html">District</a></li>
+                                    <li><a href="reCircleList.html">Revenue Circle</a></li>
+                                    <li><a href="reVillageList.html">Revenue Village</a></li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="#" class="waves-effect">
+                                    <i class="mdi mdi-apps"></i>
+                                    <span>User Management</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#" class="waves-effect">
+                                    <i class="mdi mdi-flip-horizontal"></i>
+                                    <span>Survey Question</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#" class="waves-effect">
+                                    <i class="mdi mdi-flip-vertical"></i>
+                                    <span>Resources</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="changelog.html" class="waves-effect">
+                                    <i class="mdi mdi-weather-night"></i>
+                                    <span>Audit Log</span>
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                    <!-- Sidebar -->
+                </div>
+            </div>
+            <!-- Left Sidebar End -->
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-0 font-size-18">District List</h4>
+
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
+                                            <li class="breadcrumb-item active">District</li>
+                                        </ol>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-4">Filter</h5>
+
+                                        <form class="">              
+											<div class="row">
+												<div class="col-lg-6 col-md-6">
+													<label class="sr-only" for="inlineFormSearchl2">Search</label>
+													<div class="input-group mb-2 mr-sm-3">
+													  <div class="input-group-prepend">
+														<div class="input-group-text"><i class="mdi mdi-magnify"></i></div>
+													  </div>
+													  <input type="text" class="form-control" id="inlineFormSearchl2" placeholder="Search">
+													</div>
+												</div>
+												<div class="col-lg-4 col-md-4">
+													<button type="submit" class="btn btn-primary mb-2">Submit</button>
+													<button type="submit" class="btn btn-secondary ml-2 mb-2">Reset</button>
+												</div>
+											</div>
+                                            
+                                          
+											
+                                            
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+						
+						
+						<div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">District List</h4>
+										<div class="TableHeader">
+											<div class="row">
+												<div class="col-lg-3">
+													<div class="form-group">
+														<select class="form-control">
+															<option value="">Page Size</option>
+															<option value="1">A1</option>
+															<option value="2">A2</option>
+															<option value="3">A3</option>
+															<option value="4">A4</option>
+														</select>
+													</div>
+												</div>
+												<div class="col-lg-9 text-right">
+													<div class="headerButtons">
+														<a href="importDistrict.html" class="btn btn-sm btn-primary mr-2"><i class="mdi mdi-cloud-download"></i> Import</a>
+														<a href="importDistrict.html" class="btn btn-sm btn-warning mr-2"><i class="mdi mdi-share"></i> Export</a>
+														<a href="addDistrict.html" class="btn btn-sm btn-success "><i class="mdi mdi-plus"></i> Add</a>
+													</div>
+												</div>
+												
+											</div>
+										</div>	
+                                        <div class="table-responsive">
+                                            <table class="table mb-0 listingData">
+                                                <thead>
+                                                    <tr>
+                                                        <th>S. No.</th>
+                                                        <th>Name</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">1</th>
+                                                        <td>Dhemaji</td>
+                                                        <td><span class="badge badge-pill badge-success">Active</span></td>
+                                                        <td>
+															<a href="#" class="text-primary mr-2"><i class="mdi mdi-pencil"></i></a>
+															<a href="#" class="text-danger"><i class="mdi mdi-circle-off-outline"></i></a>
+														</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">2</th>
+                                                        <td>Lakhimpur</td>
+                                                        <td><span class="badge badge-pill badge-success">Active</span></td>
+                                                        <td>
+															<a href="#" class="text-primary mr-2"><i class="mdi mdi-pencil"></i></a>
+															<a href="#" class="text-danger"><i class="mdi mdi-circle-off-outline"></i></a>
+														</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">3</th>
+                                                        <td>Biswanath</td>
+                                                        <td><span class="badge badge-pill badge-success">Active</span></td>
+                                                        <td>
+															<a href="#" class="text-primary mr-2"><i class="mdi mdi-pencil"></i></a>
+															<a href="#" class="text-danger"><i class="mdi mdi-circle-off-outline"></i></a>
+														</td>
+                                                    </tr>
+													<tr>
+                                                        <th scope="row">4</th>
+                                                        <td>Sonitpur</td>
+                                                        <td><span class="badge badge-pill badge-danger">Inactive</span></td>
+                                                        <td>
+															<a href="#" class="text-primary mr-2"><i class="mdi mdi-pencil"></i></a>
+															<a href="#" class="text-danger"><i class="mdi mdi-circle-off-outline"></i></a>
+														</td>
+                                                    </tr>
+													<tr>
+                                                        <th scope="row">5</th>
+                                                        <td>Chirang</td>
+                                                        <td><span class="badge badge-pill badge-success">Active</span></td>
+                                                        <td>
+															<a href="#" class="text-primary mr-2"><i class="mdi mdi-pencil"></i></a>
+															<a href="#" class="text-danger"><i class="mdi mdi-circle-off-outline"></i></a>
+														</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                2020 © Themesbrand.
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-right d-none d-sm-block">
+                                    Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/" target="_blank" class="text-muted">Themesbrand</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        <!-- JAVASCRIPT -->
+        <script src="assets/libs/jquery/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/metismenu/metisMenu.min.js"></script>
+        <script src="assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="assets/libs/node-waves/waves.min.js"></script>
+
+        <script src="assets/js/app.js"></script>
+
+    </body>
+</html>
