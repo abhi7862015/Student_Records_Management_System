@@ -1,312 +1,259 @@
 <?php
 include 'header.php';
 
+// Initialize variables
 $first_name = '';
 $middle_name = '';
 $last_name = '';
 $email = '';
-$username = '';
-$password = '';
-$confirm_password = '';
-$user_type = 'Teacher';
+$Gender = '';
+$Status = '';
+$AttendedClass = '';
+$SubjectExpertise = '';
+$Experience = '';
 
+// Check if the form is submitted
 if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 
-    $errors = array();
-
+    // Get form data
     $first_name = $_POST['FirstName'];
-    $middle_name = $_POST['MiddleName'];
     $last_name = $_POST['LastName'];
     $email = $_POST['Email'];
-    $username = $_POST['UserName'];
-    $password = $_POST['Password'];
-    $confirm_password = $_POST['ConfirmPassword'];
-    // $user_type = $_POST['UserType'];
+    $Gender = $_POST['Gender'];
+    $Status = $_POST['Status'];
+    $AttendedClass = $_POST['AttendedClass'];
+    $SubjectExpertise = $_POST['SubjectExpertise'];
+    $Experience = $_POST['Experience'];
 
-    if ($first_name == '') {
-        $errors[0] = "Please enter your firstname.";
-    } else if (!ctype_alpha($first_name)) {
-        $errors[0] = "Please enter only alphabets.";
-    }
-
-    if ($middle_name == '') {
-        $errors[1] = "Please enter your middle_name.";
-    } else if (!ctype_alpha($middle_name)) {
-        $errors[1] = "Please enter only alphabets.";
-    }
-
-    if ($last_name == '') {
-        $errors[2] = "Please enter your last_name.";
-    } else if (!ctype_alpha($last_name)) {
-        $errors[2] = "Please enter only alphabets.";
-    }
-
+    // Sanitize form data
+    $first_name = $conn->real_escape_string($first_name);
+    $last_name = $conn->real_escape_string($last_name);
     $email = $conn->real_escape_string($email);
-    $query1 = "select user_id from user_details where email='" . $email . "'";
+    $Gender = $conn->real_escape_string($Gender);
+    $Status = $conn->real_escape_string($Status);
+    $AttendedClass = $conn->real_escape_string($AttendedClass);
+    $SubjectExpertise = $conn->real_escape_string($SubjectExpertise);
+    $Experience = $conn->real_escape_string($Experience);
+
+    // Check if the email already exists in the database
+    $query1 = "SELECT id FROM teacher_details WHERE email='" . $email . "'";
     $result1 = $conn->query($query1);
     $num1 = mysqli_num_rows($result1);
 
-    if ($email == '') {
-        $errors[3] = "Please enter your email.";
-    } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[3] = "Please enter a valid email.";
-    } else if ($num1 > 0) {
-        $errors[3] = "Email already exists, please try again!";
-    }
-
-    $username = $conn->real_escape_string($username);
-    $query2 = "select user_id from user_details where user_name='" . $username . "'";
-    $result2 = $conn->query($query2);
-    $num2 = mysqli_num_rows($result2);
-
-    if ($username == '') {
-        $errors[4] = "Please create your username";
-    } else if ($num2 > 0) {
-        $errors[4] = "Username already exists, please try again!";
-    }
-
-    if ($password == '') {
-        $errors[5] = "Please create your password.";
-    } else if (strlen($password) < 5) {
-        $errors[5] = "Password length should be greater than 5";
-    }
-
-    if ($confirm_password == '') {
-        $errors[6] = "Please re-enter your password.";
-    } else if ($password != $confirm_password) {
-        $errors[6] = "Password not matched, please try again!";
-    }
-
-    if ($user_type == '') {
-        $errors[7] = "Please select the type of user.";
-    }
-
-    if ($user_type != "Admin") {
-        $user_status = "Inactive";
+    // If the email exists, update the existing record
+    if ($num1 > 0) {
+        $query1 = "UPDATE teacher_details SET first_name='$first_name', last_name='$last_name', email='$email', gender='$Gender', status='$Status', attended_class='$AttendedClass', subject_expertise='$SubjectExpertise', experience='$Experience', last_updated_date=CURRENT_TIMESTAMP WHERE email='$email'";
+        if ($conn->query($query1)) {
+            // Set success message for updating existing record
+            $teacher_success = "Teacher Already Exists, Data Updated Successfully!";
+        }
     } else {
-        $user_status = "Active";
-    }
-
-    if (count($errors) == 0) {
-
-        $user_type1 = $user_type;
-        $user_status1 = $user_status;
-        $first_name = $conn->real_escape_string($first_name);
-        $middle_name = $conn->real_escape_string($middle_name);
-        $last_name = $conn->real_escape_string($last_name);
-        $password = $conn->real_escape_string($password);
-        $user_type = $conn->real_escape_string($user_type);
-        $user_status = $conn->real_escape_string($user_status);
-
-        $query1 = "Insert into user_details (first_name, middle_name, last_name, email, user_name, password, user_type, user_status)
-                    values('" . $first_name . "','" . $middle_name . "','" . $last_name . "','" . $email . "','" . $username . "','" . md5($password) . "','" . $user_type . "','" . $user_status . "')";
+        // If the email does not exist, insert a new record
+        $query1 = "INSERT INTO teacher_details (first_name, last_name, email, gender, status, attended_class, subject_expertise, experience)
+                   VALUES('$first_name', '$last_name', '$email', '$Gender', '$Status', '$AttendedClass', '$SubjectExpertise', '$Experience')";
         $conn->query($query1);
-
         if ($conn->affected_rows) {
-            $lastInsteredID = $conn->insert_id;
-            $success = "Data Inserted successfully!";
-            $Failed = "Account is disabled, please wait for Admin's Activation";
+            // Set success message for inserting new record
+            $teacher_success = "Data Inserted Successfully!";
         } else {
-            $Failed = "Something wrong with database";
+            $teacher_failed = "Data Not Inserted/updated Successfully!";
         }
     }
 }
-?>
+?><div class="page-content">
+    <div class="container-fluid">
 
-<!-- ============================================================== -->
-<!-- Start right Content here -->
-<!-- ============================================================== -->
-<div class="main-content">
+        <div style="margin-top: 1rem; margin-left: 2rem;"><b><span style="color:green;"><?php if (isset($teacher_success)) echo $teacher_success; ?></span></b></div>
+        <div style="margin-top: 1rem; margin-left: 2rem;"><b><span style="color:red;"><?php if (isset($teacher_failed)) echo $teacher_failed; ?></span></b></div>
 
-    <div class="page-content">
-        <div class="container-fluid">
+        <br>
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-flex align-items-center justify-content-between">
 
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <div style="margin-top: 1rem; margin-left: 2rem;"><b><span style="color:green;"><?php if (isset($success))
-                            echo $success; ?></span></b>
-                        </div>
-                        <div style="margin-top: 1rem; margin-left: 2rem;"><span style="color:red;"><b><?php if (isset($success))
-                            echo $Failed; ?></b></span></div>
+                    <h4 class="mb-0 font-size-18">Add New Teacher</h4>
 
-                        <h4 class="mb-0 font-size-18">Add Teacher</h4>
-
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
-                                <li class="breadcrumb-item"><a href="teacherList.php">Teacher List</a></li>
-                                <li class="breadcrumb-item active">Add Teacher</li>
-                            </ol>
-                        </div>
-
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
+                            <li class="breadcrumb-item"><a href="teacherList.html">Teacher</a></li>
+                            <li class="breadcrumb-item active">Add Teacher</li>
+                        </ol>
                     </div>
+
                 </div>
             </div>
-            <!-- end page title -->
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <form class="validateJs" method="post" action="">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="FirstName">First Name<em>*</em></label>
-                                            <input type="text" class="form-control" id="FirstName" name="FirstName"
-                                                value='<?php if (isset($first_name))
-                                                    echo $first_name; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[0]))
-                                                    echo $errors[0]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="MiddleName">Middle Name<em>*</em></label>
-                                            <input type="text" class="form-control" id="MiddleName" name="MiddleName"
-                                                value='<?php if (isset($middle_name))
-                                                    echo $middle_name; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[1]))
-                                                    echo $errors[1]; ?></span>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="LastName">Last Name<em>*</em></label>
-                                            <input type="text" class="form-control" id="LastName" name="LastName" value='<?php if (isset($last_name))
-                                                echo $last_name; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[2]))
-                                                    echo $errors[2]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="Email">Email<em>*</em></label>
-                                            <input type="email" class="form-control" id="Email" name="Email" value='<?php if (isset($email))
-                                                echo $email; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[3]))
-                                                    echo $errors[3]; ?></span>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="UserName">User Name<em>*</em></label>
-                                            <input type="text" class="form-control" id="UserName" name="UserName" value='<?php if (isset($username))
-                                                echo $username; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[4]))
-                                                    echo $errors[4]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="Password">Password<em>*</em></label>
-                                            <input type="text" class="form-control" id="Password" name="Password" value='<?php if (isset($password))
-                                                echo $password; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[5]))
-                                                    echo $errors[5]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="ConfirmPassword">Confirm Password<em>*</em></label>
-                                            <input type="text" class="form-control" id="ConfirmPassword"
-                                                name="ConfirmPassword" value='<?php if (isset($confirm_password))
-                                                    echo $confirm_password; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[6]))
-                                                    echo $errors[6]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="UserType">User Type<em>*</em></label>
-                                            <select class="form-control" id="UserType" name="UserType"
-                                                data-rule-mandatory="true">
-                                                <option value="">Select User Type</option>
-                                                <option value="Teacher" <?php if (isset($user_type) && $user_type == 'Teacher')
-                                                    echo 'selected'; ?>>Teacher</option>
-                                            </select>
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[7]))
-                                                    echo $errors[7]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="Status">Status<em>*</em></label>
-                                            <select class="form-control" id="Status" name="Status"
-                                                data-rule-mandatory="true">
-                                                <option value="">Select Status</option>
-                                                <option value="Active" <?php if (isset($user_status) && $user_status == "Active")
-                                                    echo 'selected'; ?>>Active</option>
-                                                <option value="Inactive" <?php if (isset($user_status) && $user_status == "Inactive")
-                                                    echo 'selected'; ?>>Inactive</option>
-                                            </select>
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[8]))
-                                                    echo $errors[8]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div> -->
-                                </div>
-
-                                <div class="col-lg-12 col-md-12 mt-4 text-right">
-                                    <button type="submit" name="submit" value="Submit"
-                                        class="btn btn-primary mb-2 mt-1">Submit</button>
-                                    <a href="teacherList.php"><button type="button"
-                                            class="btn btn-secondary ml-2 mb-2 mt-1">Cancel</button></a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
-
         </div>
-        <!-- container-fluid -->
+        <!-- end page title -->
 
-    </div>
-    <!-- End Page-content -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="teacherForm" method="post" action="">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="FirstName">First Name<em>*</em></label>
+                                        <input type="text" class="form-control" id="FirstName" name="FirstName" value='<?php if (isset($first_name)) echo $first_name; ?>' placeholder="">
+                                        <div style="color: red" id="teacherFirstName"><span></span></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="LastName">Last Name<em>*</em></label>
+                                        <input type="text" class="form-control" id="LastName" name="LastName" value='<?php if (isset($last_name)) echo $last_name; ?>' placeholder="">
+                                        <div style="color: red" id="teacherLastName"><span></span></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="Email">Email<em>*</em></label>
+                                        <input type="email" class="form-control" id="Email" name="Email" value='<?php if (isset($email)) echo $email; ?>' placeholder="">
+                                        <div style="color: red" id="teacherEmailID"><span></span></div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="Gender">Gender<em>*</em></label>
+                                        <label for="male" style="padding: 10px 20px;">Male
+                                            <input type="radio" id="male" name="Gender" value='male' <?php if (isset($Gender) && $Gender == "male") echo "checked"; ?>>
+                                        </label>
+                                        <label for="female">Female
+                                            <input type="radio" id="female" name="Gender" value='female' <?php if (isset($Gender) && $Gender == "female") echo "checked"; ?>>
+                                        </label>
+                                        <div style="color: red" id="teacherGender"><span></span></div>
+                                    </div>
+                                </div>
 
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-6">
-                    2024 © Copyright.
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-right d-none d-sm-block">
-                        Support Email:<a href="#" target="_blank" class="text-muted"> support@srms.com </a>
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="Status">Status<em>*</em></label>
+                                        <select class="form-control" id="Status" name="Status">
+                                            <option value="">Select Status</option>
+                                            <option value="Active" <?php if (isset($Status) && $Status == "Active") echo 'selected'; ?>>Active</option>
+                                            <option value="Inactive" <?php if (isset($Status) && $Status == "Inactive") echo 'selected'; ?>>Inactive</option>
+                                        </select>
+                                        <div style="color: red" id="teacherStatus"><span></span></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="AttendedClass">Attended Class<em>*</em></label>
+                                        <input type="text" class="form-control" id="AttendedClass" name="AttendedClass" value='<?php if (isset($AttendedClass)) echo $AttendedClass; ?>' placeholder="Enter Your Standard">
+                                        <div style="color: red" id="teacherClass"><span></span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="SubjectExpertise">Subject Expertise<em>*</em></label>
+                                        <select class="form-control" id="SubjectExpertise" name="SubjectExpertise">
+                                            <option value="">Select your subject</option>
+                                            <option value="Math" <?php if (isset($SubjectExpertise) && $SubjectExpertise == "Math") echo 'selected'; ?>>Math</option>
+                                            <option value="Science" <?php if (isset($SubjectExpertise) && $SubjectExpertise == "Science") echo 'selected'; ?>>Science</option>
+                                            <option value="Social Science" <?php if (isset($SubjectExpertise) && $SubjectExpertise == "Social Science") echo 'selected'; ?>>Social Science</option>
+                                            <option value="Biology" <?php if (isset($SubjectExpertise) && $SubjectExpertise == "Biology") echo 'selected'; ?>>Biology</option>
+                                            <option value="Computer" <?php if (isset($SubjectExpertise) && $SubjectExpertise == "Computer") echo 'selected'; ?>>Computer</option>
+                                            <option value="Hindi" <?php if (isset($SubjectExpertise) && $SubjectExpertise == "Hindi") echo 'selected'; ?>>Hindi</option>
+                                            <option value="English" <?php if (isset($SubjectExpertise) && $SubjectExpertise == "English") echo 'selected'; ?>>English</option>
+                                            <option value="English Grammar" <?php if (isset($SubjectExpertise) && $SubjectExpertise == "English Grammar") echo 'selected'; ?>>English Grammer</option>
+                                            <option value="Sanskrit" <?php if (isset($SubjectExpertise) && $SubjectExpertise == "Sanskrit") echo 'selected'; ?>>Sanskrit</option>
+                                        </select>
+                                        <div style="color: red" id="teacherSubject"><span></span></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="Experience">Experience (In months)<em>*</em></label>
+                                        <input type="number" class="form-control" id="Experience" name="Experience" value='<?php if (isset($Experience)) echo $Experience; ?>' placeholder="Enter Your Work Experience">
+                                        <div style="color: red" id="teacherExp"><span></span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 mt-4 text-right">
+                                <button type="submit" name="submit" value="Submit" class="btn btn-primary mb-2 mt-1">Submit</button>
+                                <a href="teacherList.php"><button type="button" class="btn btn-secondary ml-2 mb-2 mt-1">Cancel</button></a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
+        <!-- end row -->
+    </div> <!-- container-fluid -->
 </div>
-<!-- end main content-->
+
+<script>
+    document.getElementById('teacherForm').addEventListener('submit', function(e) {
+        let errors = 0;
+
+        // Clear all previous errors
+        document.querySelectorAll("div[style='color: red'] span").forEach(span => span.textContent = '');
+
+        let firstName = document.getElementById('FirstName').value.trim();
+        let lastName = document.getElementById('LastName').value.trim();
+        let email = document.getElementById('Email').value.trim();
+        let gender = document.querySelector('input[name="Gender"]:checked');
+        let status = document.getElementById('Status').value;
+        let attendedClass = document.getElementById('AttendedClass').value.trim();
+        let subjectExpertise = document.getElementById('SubjectExpertise').value;
+        let experience = document.getElementById('Experience').value.trim();
+
+        if (firstName === '') {
+            document.getElementById('teacherFirstName').querySelector('span').textContent = 'Please enter the first name.';
+            errors++;
+        }
+
+        if (lastName === '') {
+            document.getElementById('teacherLastName').querySelector('span').textContent = 'Please enter the last name.';
+            errors++;
+        }
+
+        if (email === '') {
+            document.getElementById('teacherEmailID').querySelector('span').textContent = 'Please enter the email.';
+            errors++;
+        }
+
+        if (!gender) {
+            document.getElementById('teacherGender').querySelector('span').textContent = 'Please select a gender.';
+            errors++;
+        }
+
+        if (status === '') {
+            document.getElementById('teacherStatus').querySelector('span').textContent = 'Please select a status.';
+            errors++;
+        }
+
+        if (attendedClass === '') {
+            document.getElementById('teacherClass').querySelector('span').textContent = 'Please enter the attended class.';
+            errors++;
+        }
+
+        if (subjectExpertise === '') {
+            document.getElementById('teacherSubject').querySelector('span').textContent = 'Please select a subject expertise.';
+            errors++;
+        }
+
+        if (experience === '' || isNaN(experience) || experience <= 0) {
+            document.getElementById('teacherExp').querySelector('span').textContent = 'Please enter a valid experience in months.';
+            errors++;
+        }
+
+        // Prevent form submission if there are errors
+        if (errors > 0) {
+            e.preventDefault();
+        }
+    });
+</script>
+
+<!-- End Page-content -->
 <?php include 'footer.php'; ?>

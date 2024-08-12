@@ -1,48 +1,131 @@
 <?php
 include 'db_connection.php';
 
-$first_name = '';
-$middle_name = '';
-$last_name = '';
-$email = '';
-$username = '';
-$password = '';
-$confirm_password = '';
-$user_type = '';
-$user_status = '';
-$phone = '';
 
+$OTP = '';
+$email = '';
+$OTP_SENT = 0;
+$OTP_VERIFIED = 0;
+$OTP_NOT_VERIFIED = 0;
+$PASSWORD_CREATED = 0;
 if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 
     $errors = array();
 
-    $first_name = $_POST['FirstName'];
-    $middle_name = $_POST['MiddleName'];
-    $last_name = $_POST['LastName'];
-    $email = $_POST['Email'];
-    $username = $_POST['UserName'];
-    $password = $_POST['Password'];
-    $confirm_password = $_POST['ConfirmPassword'];
-    $user_type = $_POST['UserType'];
-    $user_status = $_POST['Status'];
-    $phone = $_POST['phone'];
+    if (isset($_POST['Email'])) {
 
-    if ($first_name == '') {
-        $errors[0] = "Please enter your firstname.";
-    } else if (!ctype_alpha($first_name)) {
-        $errors[0] = "Please enter only alphabets.";
+        $email = $_POST['Email'];
+
+        $email = $conn->real_escape_string($email);
+        $query1 = "select user_id from user_details where email='" . $email . "'";
+        $result1 = $conn->query($query1);
+        $num1 = mysqli_num_rows($result1);
+
+        if ($email == '') {
+            $errors[0] = "Please enter your email ID.";
+        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[0] = "Please enter a valid email.";
+        } else if ($num1 == 0) {
+            $errors[0] = "Email does not exists, please try again!";
+        }
+
+        if (count($errors) == 0) {
+
+            $email = $conn->real_escape_string($email);
+
+            // Generate a random 6-digit integer
+            $randomNumber = rand(100000, 999999);
+
+            $query1 = "update user_details set set_otp=$randomNumber WHERE email='$email'";
+            $conn->query($query1);
+            if ($conn->affected_rows) {
+                $OTP_SENT = 1;
+                $_SESSION['ResetPasswordByEmail'] = $email;
+                $_SESSION['randomNumber'] = $randomNumber;
+
+                $success = "OTP has been sent successfully, please check your email inbox";
+            }
+        }
+    } else if (isset($_POST['OTP'])) {
+
+        $OTP = $_POST['OTP'];
+        if (isset($_SESSION['ResetPasswordByEmail'])) {
+            $email = $_SESSION['ResetPasswordByEmail'];
+            $randomNumber = $_SESSION['randomNumber'];
+        } else {
+            $email = "";
+            $randomNumber = "";
+            $errors[0] = "Session Expired, please try again!";
+        }
+
+        if ($email == '') {
+            $errors[0] = "Please enter your email ID.";
+        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[0] = "Please enter a valid email.";
+        }
+
+
+
+        $OTP = $conn->real_escape_string($OTP);
+        $email = $conn->real_escape_string($email);
+        $query1 = "select user_id from user_details where email='" . $email . "' AND set_otp='$OTP'";
+        $result1 = $conn->query($query1);
+        $num1 = mysqli_num_rows($result1);
+
+
+        if ($OTP == '') {
+            $errors[1] = "Please enter your OTP.";
+        }
+        if ($num1 == 0) {
+            $errors[1] = "Incorrect OTP, Please try again!.";
+            $OTP_NOT_VERIFIED = 1;
+        }
+
+        if (count($errors) == 0) {
+            $OTP_VERIFIED = 1;
+        }
+    } else if (isset($_POST['Password']) || isset($_POST['ConfirmPassword'])) {
+        $Password = $_POST['Password'];
+        $ConfirmPassword = $_POST['ConfirmPassword'];
+
+        if ($Password == "") {
+            $errors[2] = "Please create a new password";
+        }
+        if ($ConfirmPassword == "") {
+            $errors[3] = "Confirm your password";
+        } else if ($Password != $ConfirmPassword) {
+            $errors[3] = "Password not matched, please try again!";
+        }
+
+        if (isset($_SESSION['ResetPasswordByEmail'])) {
+            $email = $_SESSION['ResetPasswordByEmail'];
+        } else {
+            $email = "";
+            $errors[3] = "Session Expired, please try again!";
+        }
+
+        if (count($errors) == 0) {
+            $Password = $conn->real_escape_string($Password);
+            $email = $conn->real_escape_string($email);
+            $query1 = "update user_details set password='" . md5($Password) . "', set_otp=NULL where email='" . $email . "'";
+            $conn->query($query1);
+
+            unset($_SESSION['ResetPasswordByEmail']);
+            unset($_SESSION['randomNumber']);
+            $OTP_SENT = 0;
+            $OTP_VERIFIED = 0;
+            $OTP_NOT_VERIFIED = 0;
+            $PASSWORD_CREATED = 1;
+        }else{
+            $OTP_VERIFIED = 1;
+        }
     }
-
-    if ($middle_name == '') {
-        $errors[1] = "Please enter your middle_name.";
-    } else if (!ctype_alpha($middle_name)) {
-        $errors[1] = "Please enter only alphabets.";
-    }
-
-    if ($last_name == '') {
-        $errors[2] = "Please enter your last_name.";
-    } else if (!ctype_alpha($last_name)) {
-        $errors[2] = "Please enter only alphabets.";
+} else if (isset($_GET['Resend']) && $_GET['Resend']) {
+    if (isset($_SESSION['ResetPasswordByEmail'])) {
+        $email = $_SESSION['ResetPasswordByEmail'];
+    } else {
+        $email = "";
+        $errors[1] = "Session Expired, please try again!";
     }
 
     $email = $conn->real_escape_string($email);
@@ -50,74 +133,19 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
     $result1 = $conn->query($query1);
     $num1 = mysqli_num_rows($result1);
 
-    if ($email == '') {
-        $errors[3] = "Please enter your email.";
-    } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[3] = "Please enter a valid email.";
-    } else if ($num1 > 0) {
-        $errors[3] = "Email already exists, please try again!";
-    }
+    if ($num1 > 0) {
 
-    $username = $conn->real_escape_string($username);
-    $query2 = "select user_id from user_details where user_name='" . $username . "'";
-    $result2 = $conn->query($query2);
-    $num2 = mysqli_num_rows($result2);
+        $email = $conn->real_escape_string($email);
 
-    if ($username == '') {
-        $errors[4] = "Please create your username";
-    } else if ($num2 > 0) {
-        $errors[4] = "Username already exists, please try again!";
-    }
+        // Generate a random 6-digit integer
+        $randomNumber = rand(100000, 999999);
 
-    if ($password == '') {
-        $errors[5] = "Please create your password.";
-    } else if (strlen($password) < 5) {
-        $errors[5] = "Password length should be greater than 5";
-    }
-
-    if ($confirm_password == '') {
-        $errors[6] = "Please re-enter your password.";
-    } else if ($password != $confirm_password) {
-        $errors[6] = "Password not matched, please try again!";
-    }
-
-    if ($user_type == '') {
-        $errors[7] = "Please select the type of user.";
-    }
-
-    if ($user_status == '') {
-        $errors[8] = "Please select user status";
-    }
-
-    $query3 = "select user_id from user_details where user_phone=" . $phone;
-    $result3 = $conn->query($query3);
-    if ($result3) {
-        $num3 = mysqli_num_rows($result3);
-    } else {
-        $num3 = 0;
-    }
-
-    if ($phone == '') {
-        $errors[9] = "Please enter your mobile number";
-    } else if ($num3 > 0) {
-        $errors[9] = "Mobile number already exists, please try again!";
-    }
-
-
-    if (count($errors) == 0) {
-
-        $first_name = $conn->real_escape_string($first_name);
-        $middle_name = $conn->real_escape_string($middle_name);
-        $last_name = $conn->real_escape_string($last_name);
-        $password = $conn->real_escape_string($password);
-        $user_type = $conn->real_escape_string($user_type);
-        $user_status = $conn->real_escape_string($user_status);
-
-        $query1 = "Insert into user_details (first_name, middle_name, last_name, email, user_name, password, user_type, user_status, user_phone)
-                    values('" . $first_name . "','" . $middle_name . "','" . $last_name . "','" . $email . "','" . $username . "','" . md5($password) . "','" . $user_type . "','" . $user_status . "','" . $phone . "')";
+        $query1 = "update user_details set set_otp=$randomNumber WHERE email='$email'";
         $conn->query($query1);
         if ($conn->affected_rows) {
-            $success = "Data Inserted successfully!";
+            $OTP_SENT = 1;
+            $_SESSION['ResetPasswordByEmail'] = $email;
+            $_SESSION['randomNumber'] = $randomNumber;
         }
     }
 }
@@ -168,39 +196,98 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
                             </div>
                         </div>
                         <div class="card-body pt-0">
-                            <form class="validateJs" method="post" action="signup.php">
+                            <form class="validateJs" method="post" action="">
+                                <div style="margin-top: 1rem; margin-left: 1rem;"><b><span style="color:green;"><?php if (isset($success)) echo $success;
+                                                                                                                ?></span></b></div>
+                                <br>
                                 <div class="row" style="align-items: center; padding:20px 40px;">
 
-                                    <div class="col-lg-12 col-md-12">
-                                        <div class="form-group">
-                                            <label for="Email">Email<em>*</em></label>
-                                            <input type="email" class="form-control" id="Email" name="Email" value='<?php if (isset($email))
-                                                echo $email; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red" id="ForgotEmail"></div>
+                                    <?php if ($OTP_SENT == 1 || $OTP_NOT_VERIFIED == 1) { ?>
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="form-group">
+                                                <label for="OTP">OTP<em style="color:red;">*</em></label>
+                                                <input type="text" class="form-control" id="OTP" name="OTP" placeholder="Enter Your OTP Number" data-rule-mandatory="true">
+                                                <div style="color: red" id="ForgotOTP"></div>
+                                                <div style="color: red">
+                                                    <span><?php if (isset($errors[1]))
+                                                                echo $errors[1]; ?></span>
+                                                </div>
+                                            </div>
 
+                                            <?php if (isset($randomNumber)) { ?>
+                                                <span style="color:#460089;text-align:center;">Email is not integrated, therefore showing OTP here, <br><br><b> OTP: <?php echo $randomNumber; ?></b></span>
+                                            <?php } ?>
+                                            <a href="forgotpassword.php?Resend=otp"><button style="float:right;" type="button" name="button" value="Resend OTP" class="btn btn-success mb-2 mt-1">Resend OTP</button></a>
                                         </div>
-                                    </div>
 
-                                    <div class="col-lg-12 col-md-12">
-                                        <div class="form-group">
-                                            <label for="UserName">OTP<em>*</em></label>
-                                            <input type="text" class="form-control" id="UserName" name="UserName" placeholder="Enter Your OTP Number" data-rule-mandatory="true">
-                                            <div style="color: red" id="ForgotOTP"></div>
+                                        <div class="col-lg-12 col-md-12 mt-4 text-right">
+                                            <button type="submit" name="submit" value="Submit" class="btn btn-primary mb-2 mt-1">Check OTP</button>
+                                            <a href="login.php"><button type="button" class="btn btn-secondary ml-2 mb-2 mt-1">Cancel</button></a>
                                         </div>
-                                    </div>
 
-                                    <div class="col-lg-12 col-md-12 mt-4 text-right">
-                                        <button type="submit" name="submit" value="Submit" class="btn btn-primary mb-2 mt-1">Forgot Password</button>
-                                        <a href="login.php"><button type="button" class="btn btn-secondary ml-2 mb-2 mt-1">Cancel</button></a>
-                                    </div>
+                                    <?php } else if ($OTP_VERIFIED == 1) { ?>
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="form-group">
+                                                <label for="Password">Password<em style="color:red;">*</em></label>
+                                                <input type="password" class="form-control" id="Password" name="Password" value='<?php if (isset($password))
+                                                                                                                                        echo $password; ?>' placeholder="Create a New Password">
+                                                <div style="color: red">
+                                                    <span><?php if (isset($errors[2]))
+                                                                echo $errors[2]; ?></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="form-group">
+                                                <label for="ConfirmPassword">Confirm Password<em
+                                                        style="color:red;">*</em></label>
+                                                <input type="password" class="form-control" id="ConfirmPassword"
+                                                    name="ConfirmPassword" value='<?php if (isset($confirm_password))
+                                                                                        echo $confirm_password; ?>' placeholder="Confirm Your Password">
+                                                <div style="color: red">
+                                                    <span><?php if (isset($errors[3]))
+                                                                echo $errors[3]; ?></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 mt-4 text-right">
+                                            <button type="submit" name="submit" value="Submit" class="btn btn-primary mb-2 mt-1">Create</button>
+                                            <a href="login.php"><button type="button" class="btn btn-secondary ml-2 mb-2 mt-1">Cancel</button></a>
+                                        </div>
+                                    <?php } else if ($PASSWORD_CREATED == 1) { ?>
+                                        <span class="text-center" style="color:green;text-align:center;"><b>New password has been created successfully!</b></span>
+
+                                        <div class="col-lg-12 col-md-12 mt-4 text-center">
+                                            <a href="login.php"><button type="button" class="btn btn-success ml-2 mb-2 mt-1">Login Here</button></a>
+                                        </div>
+                                    <?php } else { ?>
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="form-group">
+                                                <label for="Email">Email<em style="color:red;">*</em></label>
+                                                <input type="email" class="form-control" id="Email" name="Email" value='<?php if (isset($email))
+                                                                                                                            echo $email; ?>' placeholder="" data-rule-mandatory="true">
+                                                <div style="color: red" id="ForgotEmail"></div>
+                                                <div style="color: red">
+                                                    <span><?php if (isset($errors[0]))
+                                                                echo $errors[0]; ?></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 mt-4 text-right">
+                                            <button type="submit" name="submit" value="Submit" class="btn btn-primary mb-2 mt-1">Forgot Password</button>
+                                            <a href="login.php"><button type="button" class="btn btn-secondary ml-2 mb-2 mt-1">Cancel</button></a>
+                                        </div>
+                                    <?php } ?>
+
+
                                 </div>
                                 <br>
                                 <div style="color: red"><span><?php if (isset($errors[2]))
-                                    echo $errors[2]; ?></span>
+                                                                    echo $errors[2]; ?></span>
                                 </div>
                             </form>
                         </div>
-
                     </div>
                     <div class="mt-5 text-center">
                         <p>Want to try again with your password ? <a href="login.php"

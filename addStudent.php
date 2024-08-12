@@ -49,26 +49,37 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
     $Subject = $conn->real_escape_string($Subject);
     $Marks = $conn->real_escape_string($Marks);
 
-    // Check if the email already exists in the database
-    $query1 = "SELECT id FROM student_details WHERE email='" . $email . "'";
-    $result1 = $conn->query($query1);
-    $num1 = mysqli_num_rows($result1);
-
-    // If the email exists, update the existing record
-    if ($num1 > 0) {
-        $query1 = "UPDATE student_details SET first_name='$first_name', last_name='$last_name', email='$email', gender='$Gender', status='$Status', class='$Class', subject='$Subject', marks='$Marks', last_updated_date=CURRENT_TIMESTAMP WHERE email='$email'";
+    // Editing Students
+    if (isset($_POST['student_id'])) {
+        $student_id = $_POST['student_id'];
+        $query1 = "UPDATE student_details SET first_name='$first_name', last_name='$last_name', email='$email', gender='$Gender', status='$Status', class='$Class', subject='$Subject', marks='$Marks', last_updated_date=CURRENT_TIMESTAMP WHERE id='$student_id'";
         if ($conn->query($query1)) {
             // Set success message for updating existing record
-            $_SESSION['student_success'] = "Student Already Exists, Data Updated Successfully!";
+            $_SESSION['student_success'] = "Data Updated Successfully!";
         }
     } else {
-        // If the email does not exist, insert a new record
-        $query1 = "INSERT INTO student_details (first_name, last_name, email, gender, status, class, subject, marks)
+    // Adding New student if email id matches then it will update
+        // Check if the email already exists in the database
+        $query1 = "SELECT id FROM student_details WHERE email='" . $email . "'";
+        $result1 = $conn->query($query1);
+        $num1 = mysqli_num_rows($result1);
+
+        // If the email exists, update the existing record
+        if ($num1 > 0) {
+            $query1 = "UPDATE student_details SET first_name='$first_name', last_name='$last_name', email='$email', gender='$Gender', status='$Status', class='$Class', subject='$Subject', marks='$Marks', last_updated_date=CURRENT_TIMESTAMP WHERE email='$email'";
+            if ($conn->query($query1)) {
+                // Set success message for updating existing record
+                $_SESSION['student_success'] = "Student Already Exists, Data Updated Successfully!";
+            }
+        } else {
+            // If the email does not exist, insert a new record
+            $query1 = "INSERT INTO student_details (first_name, last_name, email, gender, status, class, subject, marks)
                    VALUES('$first_name', '$last_name', '$email', '$Gender', '$Status', '$Class', '$Subject', '$Marks')";
-        $conn->query($query1);
-        if ($conn->affected_rows) {
-            // Set success message for inserting new record
-            $_SESSION['student_success'] = "Data Inserted Successfully!";
+            $conn->query($query1);
+            if ($conn->affected_rows) {
+                // Set success message for inserting new record
+                $_SESSION['student_success'] = "Data Inserted Successfully!";
+            }
         }
     }
 } else {

@@ -123,151 +123,147 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 }
 ?>
 
-<!-- ============================================================== -->
-<!-- Start right Content here -->
-<!-- ============================================================== -->
-<div class="main-content">
+<!-- Start Page-content -->
+<div class="page-content">
+    <div class="container-fluid">
 
-    <div class="page-content">
-        <div class="container-fluid">
+        <div style="margin-top: 1rem; margin-left: 2rem;"><b><span style="color:green;"><?php if (isset($success))
+                                                                                            echo $success; ?></span></b>
+        </div>
+        <div style="margin-top: 1rem; margin-left: 2rem;"><span style="color:red;"><b><?php if (isset($success))
+                                                                                            echo $Failed; ?></b></span></div>
+        <br>
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-flex align-items-center justify-content-between">
 
-            <div style="margin-top: 1rem; margin-left: 2rem;"><b><span style="color:green;"><?php if (isset($success))
-                                                                                                echo $success; ?></span></b>
-            </div>
-            <div style="margin-top: 1rem; margin-left: 2rem;"><span style="color:red;"><b><?php if (isset($success))
-                                                                                                echo $Failed; ?></b></span></div>
-            <br>
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0 font-size-18">Add User</h4>
 
-                        <h4 class="mb-0 font-size-18">Add User</h4>
-
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
-                                <li class="breadcrumb-item"><a href="userList.php">User</a></li>
-                                <li class="breadcrumb-item active">Add User</li>
-                            </ol>
-                        </div>
-
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
+                            <li class="breadcrumb-item"><a href="userList.php">User</a></li>
+                            <li class="breadcrumb-item active">Add User</li>
+                        </ol>
                     </div>
+
                 </div>
             </div>
-            <!-- end page title -->
+        </div>
+        <!-- end page title -->
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <form class="validateJs" method="post" action="">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="FirstName">First Name<em>*</em></label>
-                                            <input type="text" class="form-control" id="FirstName" name="FirstName" value='<?php if (isset($first_name))
-                                                                                                                                echo $first_name; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[0]))
-                                                            echo $errors[0]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="MiddleName">Middle Name<em>*</em></label>
-                                            <input type="text" class="form-control" id="MiddleName" name="MiddleName" value='<?php if (isset($middle_name))
-                                                                                                                                    echo $middle_name; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[1]))
-                                                            echo $errors[1]; ?></span>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="LastName">Last Name<em>*</em></label>
-                                            <input type="text" class="form-control" id="LastName" name="LastName" value='<?php if (isset($last_name))
-                                                                                                                                echo $last_name; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[2]))
-                                                            echo $errors[2]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="Email">Email<em>*</em></label>
-                                            <input type="email" class="form-control" id="Email" name="Email" value='<?php if (isset($email))
-                                                                                                                        echo $email; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[3]))
-                                                            echo $errors[3]; ?></span>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="UserName">User Name<em>*</em></label>
-                                            <input type="text" class="form-control" id="UserName" name="UserName" value='<?php if (isset($username))
-                                                                                                                                echo $username; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[4]))
-                                                            echo $errors[4]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="Password">Password<em>*</em></label>
-                                            <input type="text" class="form-control" id="Password" name="Password" value='<?php if (isset($password))
-                                                                                                                                echo $password; ?>' placeholder="" data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[5]))
-                                                            echo $errors[5]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="ConfirmPassword">Confirm Password<em>*</em></label>
-                                            <input type="text" class="form-control" id="ConfirmPassword"
-                                                name="ConfirmPassword" value='<?php if (isset($confirm_password))
-                                                                                    echo $confirm_password; ?>' placeholder=""
-                                                data-rule-mandatory="true">
-                                            <div style="color: red">
-                                                <span><?php if (isset($errors[6]))
-                                                            echo $errors[6]; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <label for="UserType">User Type<em>*</em></label>
-                                        <select class="form-control" name="UserType" data-rule-mandatory="true">
-                                            <option value="">Select User Type</option>
-                                            <option value="Admin" <?php if (isset($user_type) && $user_type == 'Admin')
-                                                                        echo 'selected'; ?>>Admin</option>
-                                            <option value="Teacher" <?php if (isset($user_type) && $user_type == 'Teacher')
-                                                                        echo 'selected'; ?>>Teacher</option>
-                                            <option value="Parent" <?php if (isset($user_type) && $user_type == 'Parent')
-                                                                        echo 'selected'; ?>>Parent</option>
-                                            <option value="Student" <?php if (isset($user_type) && $user_type == 'Student')
-                                                                        echo 'selected'; ?>>Student</option>
-                                        </select>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="validateJs" method="post" action="">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="FirstName">First Name<em>*</em></label>
+                                        <input type="text" class="form-control" id="FirstName" name="FirstName" <?php if($user_type == "Teacher" || $user_type == "Student") echo "disabled";?>  value='<?php if (isset($first_name))
+                                                                                                                            echo $first_name; ?>' placeholder="" data-rule-mandatory="true">
                                         <div style="color: red">
-                                            <span><?php if (isset($errors[7]))
-                                                        echo $errors[7]; ?></span>
+                                            <span><?php if (isset($errors[0]))
+                                                        echo $errors[0]; ?></span>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="MiddleName">Middle Name<em>*</em></label>
+                                        <input type="text" class="form-control" id="MiddleName" name="MiddleName" value='<?php if (isset($middle_name))
+                                                                                                                                echo $middle_name; ?>' placeholder="" data-rule-mandatory="true">
+                                        <div style="color: red">
+                                            <span><?php if (isset($errors[1]))
+                                                        echo $errors[1]; ?></span>
+                                        </div>
 
-                                    <!-- <div class="col-lg-4 col-md-4">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="LastName">Last Name<em>*</em></label>
+                                        <input type="text" class="form-control" id="LastName" name="LastName" <?php if($user_type == "Teacher" || $user_type == "Student") echo "disabled";?>  value='<?php if (isset($last_name))
+                                                                                                                            echo $last_name; ?>' placeholder="" data-rule-mandatory="true">
+                                        <div style="color: red">
+                                            <span><?php if (isset($errors[2]))
+                                                        echo $errors[2]; ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="Email">Email<em>*</em></label>
+                                        <input type="email" class="form-control" id="Email" name="Email" <?php if($user_type == "Teacher" || $user_type == "Student") echo "disabled";?>  value='<?php if (isset($email))
+                                                                                                                    echo $email; ?>' placeholder="" data-rule-mandatory="true">
+                                        <div style="color: red">
+                                            <span><?php if (isset($errors[3]))
+                                                        echo $errors[3]; ?></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="UserName">User Name<em>*</em></label>
+                                        <input type="text" class="form-control" id="UserName" name="UserName" value='<?php if (isset($username))
+                                                                                                                            echo $username; ?>' placeholder="" data-rule-mandatory="true">
+                                        <div style="color: red">
+                                            <span><?php if (isset($errors[4]))
+                                                        echo $errors[4]; ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="Password">Password<em>*</em></label>
+                                        <input type="text" class="form-control" id="Password" name="Password" value='<?php if (isset($password))
+                                                                                                                            echo $password; ?>' placeholder="" data-rule-mandatory="true">
+                                        <div style="color: red">
+                                            <span><?php if (isset($errors[5]))
+                                                        echo $errors[5]; ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="ConfirmPassword">Confirm Password<em>*</em></label>
+                                        <input type="text" class="form-control" id="ConfirmPassword"
+                                            name="ConfirmPassword" value='<?php if (isset($confirm_password))
+                                                                                echo $confirm_password; ?>' placeholder=""
+                                            data-rule-mandatory="true">
+                                        <div style="color: red">
+                                            <span><?php if (isset($errors[6]))
+                                                        echo $errors[6]; ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <label for="UserType">User Type<em>*</em></label>
+                                    <select class="form-control" name="UserType" data-rule-mandatory="true">
+                                        <option value="">Select User Type</option>
+                                        <option value="Admin" <?php if (isset($user_type) && $user_type == 'Admin')
+                                                                    echo 'selected'; ?>>Admin</option>
+                                        <option value="Teacher" <?php if (isset($user_type) && $user_type == 'Teacher')
+                                                                    echo 'selected'; ?>>Teacher</option>
+                                        <option value="Parent" <?php if (isset($user_type) && $user_type == 'Parent')
+                                                                    echo 'selected'; ?>>Parent</option>
+                                        <option value="Student" <?php if (isset($user_type) && $user_type == 'Student')
+                                                                    echo 'selected'; ?>>Student</option>
+                                    </select>
+                                    <div style="color: red">
+                                        <span><?php if (isset($errors[7]))
+                                                    echo $errors[7]; ?></span>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="col-lg-4 col-md-4">
                                         <div class="form-group">
                                             <label for="Status">Status<em>*</em></label>
                                             <select class="form-control" id="Status" name="Status"
@@ -284,54 +280,37 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
                                             </div>
                                         </div>
                                     </div> -->
-                                </div>
+                            </div>
 
-                                <div class="col-lg-12 col-md-12 mt-4 text-right">
-                                    <button type="submit" name="submit" value="Submit"
-                                        class="btn btn-primary mb-2 mt-1">Submit</button>
-                                    <a href="userList.php"><button type="button"
-                                            class="btn btn-secondary ml-2 mb-2 mt-1">Cancel</button></a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
-
-        </div> <!-- container-fluid -->
-    </div>
-    <!-- End Page-content -->
-
-    <script>
-        $('#existingUserType').on('change', function() {
-            var inputValue = $(this).val();
-            $.ajax({
-                url: 'FetchUsers.php', // Replace with your server endpoint
-                type: 'POST',
-                data: 'user_type=' + inputValue + '&Fetch=user',
-                success: function(response) {
-                    // Handle the response from the server
-                    $('#user_id').html(response);
-                },
-            });
-        });
-    </script>
-
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-6">
-                    2020 © Copyright.
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-right d-none d-sm-block">
-                        Support Email:<a href="#" target="_blank" class="text-muted"> support@frimsassam.com </a>
+                            <div class="col-lg-12 col-md-12 mt-4 text-right">
+                                <button type="submit" name="submit" value="Submit"
+                                    class="btn btn-primary mb-2 mt-1">Submit</button>
+                                <a href="userList.php"><button type="button"
+                                        class="btn btn-secondary ml-2 mb-2 mt-1">Cancel</button></a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
+        <!-- end row -->
+
+    </div> <!-- container-fluid -->
 </div>
-<!-- end main content-->
+<!-- End Page-content -->
+
+<script>
+    $('#existingUserType').on('change', function() {
+        var inputValue = $(this).val();
+        $.ajax({
+            url: 'FetchUsers.php', // Replace with your server endpoint
+            type: 'POST',
+            data: 'user_type=' + inputValue + '&Fetch=user',
+            success: function(response) {
+                // Handle the response from the server
+                $('#user_id').html(response);
+            },
+        });
+    });
+</script>
 <?php include 'footer.php'; ?>

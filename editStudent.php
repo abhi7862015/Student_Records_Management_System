@@ -18,12 +18,6 @@ if (mysqli_num_rows($result2) > 0) {
 }
 
 ?>
-
-<!-- ============================================================== -->
-<!-- Start right Content here -->
-<!-- ============================================================== -->
-<div class="main-content">
-
     <div class="page-content">
         <div class="container-fluid">
 
@@ -138,6 +132,7 @@ if (mysqli_num_rows($result2) > 0) {
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden"id="student_id" name="student_id" value='<?php if (isset($_GET)) echo $_GET['student_id']; ?>'>
 
                                 <div class="col-lg-12 col-md-12 mt-4 text-right">
                                     <button type="submit" name="submit" value="Submit" class="btn btn-primary mb-2 mt-1">Submit</button>
@@ -152,23 +147,4 @@ if (mysqli_num_rows($result2) > 0) {
         </div> <!-- container-fluid -->
     </div>
     <!-- End Page-content -->
-
-
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-6">
-                    2020 © Copyright.
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-right d-none d-sm-block">
-                        Support Email:<a href="#" target="_blank" class="text-muted"> support@frimsassam.com </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-</div>
-<!-- end main content-->
-
 <?php include 'footer.php'; ?>
